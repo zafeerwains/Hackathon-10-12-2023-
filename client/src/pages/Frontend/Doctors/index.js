@@ -1,9 +1,20 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import {useAuthContext} from "../../../contexts/AuthContext"
+import { message } from 'antd'
 
 export default function index() {
+    const { isAuth, user } = useAuthContext()
     const [DoctorsData, setDoctorsData] = useState([])
-    const BookAppopintment=()=>{}
+    const BookAppopintment = (doctor) => {
+        if (!isAuth) return message.error("login first to Book an appointment")
+
+        let AppointmentData = { patientName:user.data.patientData.name, doctorName: doctor.name, }
+        axios.post("http://localhost:8000/appointment/addappointment", AppointmentData)
+        .then((res)=>{
+            message.success("Appointment added successfully")
+        })
+    }
     useEffect(() => {
         axios.get("http://localhost:8000/doctor/doctors")
             .then((response) => {
@@ -37,9 +48,9 @@ export default function index() {
                                         <th scope="col" className="px-5 py-3 text-2xl text-left  font-bold italic  border-b border-[#000] text-[#000]">
                                             Email
                                         </th>
-                                        {/* <th scope="col" className="px-5 py-3 text-2xl text-left  font-bold italic  border-b border-[#000] text-[#000]">
-                                         Actions
-                                        </th> */}
+                                        <th scope="col" className="px-5 py-3 text-2xl text-left  font-bold italic  border-b border-[#000] text-[#000]">
+                                            Actions
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -61,12 +72,9 @@ export default function index() {
                                             <td className="px-5 py-5 text-sm  border-b border-[#000] text-[#000]">
                                                 {rowData.email}
                                             </td>
-                                            {/* <td className="px-5 py-5 text-sm  border-b border-[#000] text-[#000]">
-                                                <Space>
-                                                    <Tooltip title="Take Appointment" color='red'  ><Button onClick={()=>BookAppopintment()}  />Take Appointment</Tooltip>
-                                                    
-                                                </Space> */}
-                                            {/* </td> */}
+                                            <td className="px-5 py-5 text-sm  border-b border-[#000] text-[#000]">
+                                                <span className='italic bold text-md text-[red] cursor-pointer' onClick={() => BookAppopintment(rowData)} > Book Appointment</span>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>

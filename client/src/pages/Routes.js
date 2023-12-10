@@ -10,6 +10,8 @@ import DoctorDashboard from './Dashboard/doctorDashboard';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Doctors from "../pages/Frontend/Doctors"
+import Appointment from "../pages/Frontend/Appointments"
+import ContactUs from "../pages/Frontend/contactUs"
 
 export default function Index() {
     const { isAuth, user } = useAuthContext();
@@ -29,6 +31,8 @@ console.log(isAuth);
                         element={!isAuth ? <SignUp /> : <Navigate to="/dashboard" />}
                     />
                       <Route path="/doctors" element={<Doctors/>}/>
+                      <Route path="/appointments" element={<Appointment/>}/>
+                      <Route path="/contactUs" element={<ContactUs/>}/>
                       
                     <Route
                         path="/dashboard"
