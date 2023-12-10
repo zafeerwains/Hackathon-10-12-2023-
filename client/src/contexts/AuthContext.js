@@ -20,9 +20,9 @@ export default function AuthContextProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initState);
 
   const readUser = async (user) => {
-    console.log("readUser", user);
     if (user.loginData.role === "doctor") {
-      axios.get(`http://localhost:8000/doctors/${user.id}`,user.loginData)
+      console.log("readUser", user);
+      axios.post(`http://localhost:8000/doctor/${user.id}`,user.loginData)
         .then((response) => {
           dispatch({ type: "SET_LOGGED_IN", payload: { response } });
           message.success("Logged in successfully");

@@ -40,8 +40,12 @@ console.log(isAuth);
                     />
                     <Route
                         path="/patientDashboard"
-                        element={<PrivateRoutesForAdmin Component={PatientDashboard} />}
+                        element={<PrivateRoutesForAdmin Component={<PatientDashboard/>} />}
                     />
+                    {/* <Route
+                        path="/doctorDashboard"
+                        element={<PrivateRoutesForAdmin Component={<DoctorDashboard/>} />}
+                    /> */}
                    
                 
                 </Routes>

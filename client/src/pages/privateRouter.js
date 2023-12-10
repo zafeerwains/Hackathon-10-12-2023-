@@ -7,15 +7,12 @@ export default function PrivateRoutesForAdmin({ Component }) {
 
   if (!isAuth) {
     return <Navigate to="/Auth" />;
-  }
-
-//   if (isAuth && user.role === "doctor") {
-//     return <Navigate to="/doctorDashboard" />;
-//   }
-
-  if (isAuth || user.role === "patient") {
+  } else if (isAuth && user.role === "patient") {
     return <Navigate to="/patientDashboard" />;
+  } else if (isAuth && user.role === "doctor") {
+    return <Navigate to="/doctorDashboard" />;
   }
 
+  // If none of the conditions match, render the original component
   return <Component />;
 }
