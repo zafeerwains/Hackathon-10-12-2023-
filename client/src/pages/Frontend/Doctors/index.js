@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react'
 
 export default function index() {
     const [DoctorsData, setDoctorsData] = useState([])
+    const BookAppopintment=()=>{}
     useEffect(() => {
-        axios.get("http://localhost8000/doctor/doctors")
+        axios.get("http://localhost:8000/doctor/doctors")
             .then((response) => {
                 console.log("response : ", response.data);
                 setDoctorsData(response.data);
-            
+
             })
             .catch((error) => {
                 console.error("Error : ", error);
@@ -34,10 +35,10 @@ export default function index() {
                                             Phone Number
                                         </th>
                                         <th scope="col" className="px-5 py-3 text-2xl text-left  font-bold italic  border-b border-[#000] text-[#000]">
-                                           Email
+                                            Email
                                         </th>
                                         {/* <th scope="col" className="px-5 py-3 text-2xl text-left  font-bold italic  border-b border-[#000] text-[#000]">
-                                         Timming
+                                         Actions
                                         </th> */}
                                     </tr>
                                 </thead>
@@ -47,28 +48,25 @@ export default function index() {
                                             <td className="px-5 py-5 text-sm  border-b text-left border-[#000] text-[#000]">
                                                 <div className="flex items-center">
                                                     <div>
-                                                        <p className=" whitespace-no-wrap">{rowData.title}</p>
+                                                        <p className=" whitespace-no-wrap">{rowData.name}</p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-5 py-5 text-sm  border-b border-[#000] text-[#000]">
-                                                <p className=" whitespace-no-wrap">{rowData.category}</p>
+                                                <p className=" whitespace-no-wrap">{rowData.specialization}</p>
                                             </td>
                                             <td className="px-5 py-5 text-sm  border-b border-[#000] text-[#000]">
-                                                <p className=" whitespace-no-wrap">{rowData.createdAt}</p>
+                                                <p className=" whitespace-no-wrap">{rowData.contactDetails.phoneNumber}</p>
                                             </td>
                                             <td className="px-5 py-5 text-sm  border-b border-[#000] text-[#000]">
-                                                {truncateStringTo10Words(rowData.description)}
+                                                {rowData.email}
                                             </td>
-                                            <td className="px-5 py-5 text-sm  border-b border-[#000] text-[#000]">
+                                            {/* <td className="px-5 py-5 text-sm  border-b border-[#000] text-[#000]">
                                                 <Space>
-                                                    <Tooltip title="Delete" color='red'  ><Button onClick={() => deleteBlog(rowData)} danger icon={<DeleteOutlined />} /></Tooltip>
-                                                    <Tooltip title="Edit"  ><Button type="primary" icon={<EditOutlined className='text-[#000]' onClick={() => {
-                                                        setIsModalOpenForUpdate(true)
-                                                        setState(rowData)
-                                                    }} />} /></Tooltip>
-                                                </Space>
-                                            </td>
+                                                    <Tooltip title="Take Appointment" color='red'  ><Button onClick={()=>BookAppopintment()}  />Take Appointment</Tooltip>
+                                                    
+                                                </Space> */}
+                                            {/* </td> */}
                                         </tr>
                                     ))}
                                 </tbody>
