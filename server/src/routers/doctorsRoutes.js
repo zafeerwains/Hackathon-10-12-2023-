@@ -10,10 +10,10 @@ router.get("/doctors", async (req, res) => {
 });
 
 // Read a specific doctor data
-router.get("/doctors/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
     try {
-        const doctorId = req.params.id;
-        const doctorData = await doctors.findById(doctorId);
+        // const doctorId = req.params.id;
+        const doctorData = await doctors.findOne({ email: req.body.email });
 
         if (!doctorData) {
             return res.status(404).json({ message: "doctor not found!" });

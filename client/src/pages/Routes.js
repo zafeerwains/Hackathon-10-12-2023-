@@ -1,26 +1,48 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes ,Navigate} from 'react-router-dom';
 import Home from './Frontend/Home';
-// import { useAuthContext } from '../contexts/AuthContext';
+import { useAuthContext } from '../contexts/AuthContext';
 import Login from './Auth/login/Login';
 import SignUp from './Auth/signUp/SignUp';
-
+import PrivateRoutesForAdmin from './privateRouter';
+import PatientDashboard from './Dashboard/patientDashboard';
+import DoctorDashboard from './Dashboard/doctorDashboard';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import Doctors from "../pages/Frontend/Doctors"
 
 export default function Index() {
-    // const { isAuth, user } = useAuthContext();
-
+    const { isAuth, user } = useAuthContext();
+console.log(isAuth);
     return (
         <>
-            {/* <Header /> */}
+            <Header />
             <main>
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/Auth" element={<Login />} />
-                    <Route path="/Auth/createUser" element={<SignUp />} />
-                    
+                    <Route
+                        path="/Auth"
+                        element={!isAuth ? <Login /> : <Navigate to="/dashboard" />}
+                    /> 
+                    <Route
+                           path="/Auth/createUser"
+                        element={!isAuth ? <SignUp /> : <Navigate to="/dashboard" />}
+                    />
+                      <Route path="/doctors" element={<Doctors/>}/>
+                      
+                    <Route
+                        path="/dashboard"
+                        element={<PrivateRoutesForAdmin Component={DoctorDashboard} />}
+                    />
+                    <Route
+                        path="/patientDashboard"
+                        element={<PrivateRoutesForAdmin Component={PatientDashboard} />}
+                    />
+                   
+                
                 </Routes>
             </main>
-            {/* <Footer /> */}
+            <Footer />
         </>
     );
 }

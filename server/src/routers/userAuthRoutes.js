@@ -37,13 +37,12 @@ router.post("/login", async (req, res) => {
     user.password
   );
 
-  console.log("passwordMatched : ", passwordMatched);
 
   if (!passwordMatched) {
     return res.status(404).json({ message: "Authentication failed" });
   }
 
-  var token = jwt.sign({ id: user._id, admin: false }, process.env.SECRET_KEY);
+  var token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
 
   return res.status(200).json({ message: "User logged in!", token });
 });

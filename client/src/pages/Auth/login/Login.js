@@ -1,42 +1,44 @@
 import React from "react";
 import { Link } from "react-router-dom"
-// import { useAuthContext } from "../contexts/AuthContext";
-import { Button, Divider, Form, Input, message } from "antd";
+import { useAuthContext } from "../../../contexts/AuthContext";
+import { Button, Divider, Form, Input, Select, message } from "antd";
 import Title from "antd/es/typography/Title";
 import { useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
-const inputStyle = {
-    border: 'none',
-    borderBottom: '2px solid #000',
-    outline: 'none',
-    boxShadow: 'none',
-    color: '#000',
-    background: "transparent"
-};
+
 
 export default function Login() {
-    // const { readUser } = useAuthContext()
+    const { readUser } = useAuthContext()
     const [isProcessing, setIsProcessing] = useState(false)
     const [state, setState] = useState({ email: "", password: "" })
+    const [roleOfUser, setRoleOfUser] = useState("")
     const handleChange = (e) => setState({ ...state, [e.target.name]: e.target.value })
     const handleLogin = async (e) => {
         e.preventDefault()
+        let role=roleOfUser
         let { email, password } = state
-        setIsProcessing(true)
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
+        let loginData = { role:roleOfUser, email, password }
+        if (!email || !password || !role) return message.error("Fill all inputs")
+        try {
+            setIsProcessing(true)
+            const response = await axios.post("http://localhost:8000/auth/login", loginData);
+
+let user ={loginData,...jwtDecode(response.data.token)} 
+            if (response.status === 200) {
                 readUser(user);
-                message.success("Logged In successfully")
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                message.error("Some Error Occurs in Log In")
-            })
-            .finally(() => {
-                setIsProcessing(false)
-            });
+               
+            } else {
+                message.error("Login failed");
+            }
+        } catch (error) {
+            console.error("An error occurred during login:", error.message);
+            message.error("Login failed");
+        } finally {
+            setIsProcessing(false);
+        }
+        setIsProcessing(false)
     }
     return (
         <>
@@ -50,11 +52,18 @@ export default function Login() {
 
                     <Form layout="vertical">
                         <Form.Item label="Email" style={{ color: "#000" }}>
-                            <Input className="" name='email' style={inputStyle} onChange={handleChange} />
+                            <Input className="" name='email' onChange={handleChange} />
                         </Form.Item>
                         <Form.Item label="Password" >
-                            <Input type="password" className="" style={inputStyle} name='password' onChange={handleChange} />
+                            <Input type="password" className="" name='password' onChange={handleChange} />
                         </Form.Item >
+                        <Form.Item label="Select">
+                            <Select onChange={(value) => { setRoleOfUser(value) }}>
+                                <Select.Option value="doctor">Doctor</Select.Option>
+                                <Select.Option value="patient">Patient</Select.Option>
+                            </Select>
+                        </Form.Item>
+
                         <div className="flex justify-content-center">
                             <Button htmlType='submit' className='px-10  mx-auto text-center rounded-2xl hover:rounded-lg ' style={{ background: "transparent", border: " 1px solid #000", color: "#000" }} loading={isProcessing}
                                 onClick={handleLogin}
@@ -62,7 +71,7 @@ export default function Login() {
                                 Login</Button>
                         </div>
 
-                     
+
 
                         <Form.Item label="New Here ?" >
                             <Link to={"/Auth/createUser"} style={{ color: "#000" }} >

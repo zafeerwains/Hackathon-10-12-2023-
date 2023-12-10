@@ -10,10 +10,11 @@ router.get("/patients", async (req, res) => {
 });
 
 // Read a specific patient data
-router.get("/patients/:id", async (req, res) => {
+router.post("/:id", async (req, res) => {
     try {
-        const patientId = req.params.id;
-        const patientData = await patients.findById(patientId);
+        // const patientId = req.params.id;
+        console.log( req.body);
+        const patientData = await patients.findOne({ email: req.body.email });
 
         if (!patientData) {
             return res.status(404).json({ message: "patient not found!" });
